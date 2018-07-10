@@ -27,10 +27,11 @@ gulp.task('test', function () {
         .pipe(mocha({reporter: 'spec', grep: (argv.grep || argv.g)}));
 });
 
-gulp.task('clean', function () {
+gulp.task('clean', function (done) {
     rimraf.sync('src/logs');
     rimraf.sync('logs');
     rimraf.sync('ssh');
+    done();
 });
 
 gulp.task('bump', function () {
@@ -60,7 +61,7 @@ gulp.task('prince', function(done) {
 });
 
 // pass parameters like: gulp build --win --osx --linux
-gulp.task('build', ['clean'], function (done) {
+gulp.task('build', gulp.series('clean', function (done) {
 
     var platforms = [];
 
@@ -128,7 +129,7 @@ gulp.task('build', ['clean'], function (done) {
     //         }
     //     });
     // }
-});
+}));
 
 gulp.task('release', function(done) {
     const p = require('./package');
@@ -330,4 +331,4 @@ gulp.task('release', function(done) {
     });
 });
 
-gulp.task('default', ['test']);
+gulp.task('default', gulp.series('test'));
