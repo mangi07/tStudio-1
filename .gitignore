@@ -24,3 +24,7 @@ src/logs/
 
 /unit_tests/migration/temp/
 /src/prince/
+
+# Ben added to maintain the door43-client code in version control as a separate project
+src/door43-client
+
