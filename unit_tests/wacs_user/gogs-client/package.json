@@ -1,0 +1,65 @@
+{
+  "_args": [
+    [
+      "gogs-client@0.5.2",
+      "C:\\projects\\WA\\translationStudio\\ts-desktop"
+    ]
+  ],
+  "_from": "gogs-client@0.5.2",
+  "_id": "gogs-client@0.5.2",
+  "_inBundle": false,
+  "_integrity": "sha1-OEVJyEkDRlk8Hw1YjNTe0NkpJWk=",
+  "_location": "/gogs-client",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "gogs-client@0.5.2",
+    "name": "gogs-client",
+    "escapedName": "gogs-client",
+    "rawSpec": "0.5.2",
+    "saveSpec": null,
+    "fetchSpec": "0.5.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/gogs-client/-/gogs-client-0.5.2.tgz",
+  "_spec": "0.5.2",
+  "_where": "C:\\projects\\WA\\translationStudio\\ts-desktop",
+  "author": {
+    "name": "Joel Lonbeck",
+    "email": "joel@neutrinographics.com",
+    "url": "http://neutrinographics.com"
+  },
+  "bugs": {
+    "url": "https://github.com/unfoldingWord-dev/node-gogs-client/issues"
+  },
+  "description": "A client library for interacting with the gogs REST api.",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^2.2.0",
+    "lodash": "^4.6.1",
+    "mocha": "^2.4.5"
+  },
+  "homepage": "https://github.com/unfoldingWord-dev/node-gogs-client#readme",
+  "keywords": [
+    "gogs",
+    "api",
+    "rest",
+    "client",
+    "git"
+  ],
+  "license": "MIT",
+  "main": "./lib/gogs-client.js",
+  "name": "gogs-client",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unfoldingWord-dev/node-gogs-client.git"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "tonicExampleFilename": "example.js",
+  "version": "0.5.2"
+}
