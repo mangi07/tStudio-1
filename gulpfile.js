@@ -86,6 +86,7 @@ gulp.task('build', gulp.series('clean', function (done) {
         return new RegExp('(^/' + name + '|' + '^/node_modules/' + name + ')');
     });
 
+
     packager({
         'arch': 'all',
         'platform': platforms,
@@ -103,9 +104,14 @@ gulp.task('build', gulp.series('clean', function (done) {
         'out': BUILD_DIR,
         'app-version': p.version,
         'icon': './icons/icon'
-    }, function () {
+    }).then(appPaths => {
+        for (appPath in appPaths){
+            console.log("appPath: " + appPath);
+        }
         console.log('Done building...');
         done();
+    }).catch(err => {
+        console.log("packager error: " + err);
     });
 
     // TODO: figure out how to make the builder do this
