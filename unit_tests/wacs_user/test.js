@@ -10,6 +10,10 @@ let configurator;
 let userManager;
 let config;
 
+// TODO: work this in:
+// gitea token name granting access to test api: ts-studio
+// token: see file ts-studio_token
+
 // We do not even need an electron app since the testing is changed
 // from storing config in working directory rather than through 
 // the browser's window.localStorage
@@ -17,7 +21,7 @@ let config;
 // so it depends on electron to give it the required browser environment,
 // but IMO we don't want to have to depend on electron just to test a git api!!
 // TODO: factor out the setup code and make the test
-// a module required by the setup (ie: electron app)
+// a module required by the setup
 
 function getConfigurator(){
     var c = new Configurator();

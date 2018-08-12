@@ -61,7 +61,7 @@ gulp.task('prince', function(done) {
 });
 
 // pass parameters like: gulp build --win --osx --linux
-gulp.task('build', gulp.series('clean', function (done) {
+gulp.task('build', gulp.series('clean', 'prince', function (done) {
 
     var platforms = [];
 
@@ -85,6 +85,14 @@ gulp.task('build', gulp.series('clean', function (done) {
     ]).map(function (name) {
         return new RegExp('(^/' + name + '|' + '^/node_modules/' + name + ')');
     });
+
+    // only package the prince binaries for the given platforms
+    if (!argv.win) ignored = ignored.concat(new RegExp('(^/src/prince/win)'));
+    if (!argv.osx) ignored = ignored.concat(new RegExp('(^/src/prince/osx)'));
+    if (!argv.linux) ignored = ignored.concat(new RegExp('(^/src/prince/linux)'));
+    // todo: for robustness, test adding a jibberish regex to ignored
+    ignored = ignored.concat(new RegExp('(^/blah/blahblah/)'));
+    console.log(ignored);
 
 
     packager({
