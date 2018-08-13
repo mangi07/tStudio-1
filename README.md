@@ -32,9 +32,10 @@ For more information please read the [wiki](https://github.com/unfoldingWord-dev
 The following commands are available from within the project directory:
 
 * `$ gulp build --win` builds a windows distribution (other available flags are `--osx` and `--linux`)
-* `$ gulp test` runs all Mocha unit tests
-* `$ gulp test --grep [string]` runs the Mocha unit tests that match the string
-* `$ gulp` runs the `test` task
+* `$ gulp unittest` runs all Mocha unit tests
+* `$ gulp unittest --grep [string]` runs the Mocha unit tests that match the string
+* `$ gulp` runs the `unittest` task
+* `$ gulp integrationtest` runs all Mocah integration tests
 * `$ npm start` runs the application (without building it)
 
 > Note: You can open the Chrome Developer Tools while the app is running by pressing `Ctrl+Shift+I` on Windows/Linux or `Cmd-Shift-I` on macOS.

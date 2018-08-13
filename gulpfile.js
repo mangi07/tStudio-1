@@ -22,10 +22,15 @@ const APP_NAME = 'translationStudio',
     BUILD_DIR = 'out/',
     RELEASE_DIR = 'release/';
 
-gulp.task('test', function () {
+gulp.task('unittest', function () {
     return gulp.src(UNIT_TEST_FILES, { read: false })
         .pipe(mocha({reporter: 'spec', grep: (argv.grep || argv.g)}));
 });
+
+gulp.task('integrationtest', function () {
+    return gulp.src('./integration_tests/*/*.js', { read: false })
+        .pipe(mocha({reporter: 'spec'}));
+})
 
 gulp.task('clean', function (done) {
     rimraf.sync('src/logs');
@@ -345,4 +350,4 @@ gulp.task('release', function(done) {
     });
 });
 
-gulp.task('default', gulp.series('test'));
+gulp.task('default', gulp.series('unittest'));
