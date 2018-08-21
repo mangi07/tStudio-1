@@ -1,0 +1,5 @@
+{
+    "name": "giteaUrl",
+    "development": "http://192.168.213.129:3000/api/v1/",
+    "production": "http://git.bibletranslationtools.org/api/v1/"
+}

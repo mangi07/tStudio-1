@@ -26,6 +26,22 @@ After the repository has been cloned to your computer run the following command 
 
     $ npm install && bower install
 
+In order to test creation of new users and other operations that require api authentication, you can place a file named private.json in src/config/ containing the following:
+
+```javascript
+[
+    {
+        "name": "gogs-token",
+        "value": "<api token goes here>",
+        "meta": {
+            "mutable": false,
+            "type": "string"
+        }
+    }
+]
+```
+The api token (application key) for gitea can be created by an administrator.
+
 For more information please read the [wiki](https://github.com/unfoldingWord-dev/ts-desktop/wiki).
 
 ###Commands
@@ -37,5 +53,7 @@ The following commands are available from within the project directory:
 * `$ gulp` runs the `unittest` task
 * `$ gulp integrationtest` runs all Mocah integration tests
 * `$ npm start` runs the application (without building it)
+
+> Note: Installation of prince, needed for pdf export from the app, was added to the gulp build task.
 
 > Note: You can open the Chrome Developer Tools while the app is running by pressing `Ctrl+Shift+I` on Windows/Linux or `Cmd-Shift-I` on macOS.
