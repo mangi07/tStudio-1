@@ -10,6 +10,15 @@ password = 'password'
 # with dynamic attestation such as through the use of JWT...
 # to allow a user to authenticate with username and password and only
 # be able to make changes to his/her account
+# https://www.approov.io/blog/hands-on-mobile-api-security-using-a-proxy-to-protect-api-keys.html
+
+# (1) First we want to get the admin API key to create a user on his/her behalf.
+#     In order to hide the API key, this can be done using a proxy server:
+#     https://www.express-gateway.io/docs/core-concepts/#endpoints
+#     https://www.express-gateway.io/getting-started-with-expression-policy/ esp. "Proxying API Keys"
+# 
+# (2) Once we have a user created, we can use BasicAuth for that user's subsequent requests 
+#     sent directly to the Gitea API.
 
 url = "https://" + username + ":" + password + "@" + base_url + "api/v1/users/"  
 url_no_auth = "https://" + base_url + "api/v1/users/"  
