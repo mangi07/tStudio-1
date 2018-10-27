@@ -31,6 +31,8 @@ This application uses git version control to keep track of translations.  Collab
 
 In order to communicate with the git server, the application uses the urls given in src/config/giteaUrls.json.  Read Gitea's [documentation] (https://docs.gitea.io/en-us/) if you need to know more about how it works.
 
+> Note: Deleting a project from the desktop UI does not seem to delete the corresponding content on the git server.
+
 In order to test creation of new users and other operations that require api authentication, you can place a file named private.json in src/config/ containing the following:
 
 ```javascript

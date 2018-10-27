@@ -615,8 +615,8 @@
           var repo = this.importdata.repo.repo;
           var project = this.importdata.repo.project;
           var force = this.importdata.force || false;
-          var server = "git.door43.org";
-          var repourl = "https://" + server + "/" + repo;
+          var server = require('./../config/giteaUrls').gitUrl
+          var repourl = server + repo;
           var targetDir = App.configurator.getValue('targetTranslationsDir');
           var tmpDir = App.configurator.getValue('tempDir');
           var targetPath = path.join(targetDir, project);

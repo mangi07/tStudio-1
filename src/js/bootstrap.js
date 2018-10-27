@@ -238,7 +238,7 @@ process.stdout.write = console.log.bind(console);
 
         userManager: (function () {
             return new UserManager({
-                token: configurator.getValue('gogs-token')
+                token: configurator.getValue('wacs-token')
             });
         })(),
 
