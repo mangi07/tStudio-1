@@ -608,6 +608,7 @@
           this.openImport();
       },
 
+      // TODO: change server variable here to read in correct server from config file
       startRepoImport: function () {
           var mythis = this;
           var path = require('path');
@@ -956,7 +957,8 @@
                   return App.gitManager.push(user, paths.projectDir, repo).then(App.utils.ret(repo.full_name));
               })
               .then(function (fullname) {
-                  var url = "https://door43.org/u/" + fullname;
+                  var apiUrl = require('./../config/giteaUrls').gitUrl
+                  var url = apiUrl + fullname;
 
                   mythis.set('options.title', "Upload Complete");
                   mythis.set('options.body', "Your project has been uploaded to:");

@@ -26,6 +26,11 @@ After the repository has been cloned to your computer run the following command 
 
     $ npm install && bower install
 
+##Communicating With Git Server
+This application uses git version control to keep track of translations.  Collaboration between translators can be done through a git server.
+
+In order to communicate with the git server, the application uses the urls given in src/config/giteaUrls.json.  Read Gitea's [documentation] (https://docs.gitea.io/en-us/) if you need to know more about how it works.
+
 In order to test creation of new users and other operations that require api authentication, you can place a file named private.json in src/config/ containing the following:
 
 ```javascript

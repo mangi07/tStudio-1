@@ -1,0 +1,5 @@
+{
+    "_comment": "used in production",
+    "gitUrl": "http://git.bibletranslationtools.org/",
+    "apiUrl": "http://git.bibletranslationtools.org/api/v1/"
+}

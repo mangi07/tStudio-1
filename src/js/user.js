@@ -2,16 +2,12 @@
 
 var _ = require('lodash'),
     Gogs = require('gogs-client'),
-    giteaApiUrl = require('./../config/giteaApiUrl').development;
-    //giteaApiUrl = require('./../config/giteaApiUrl').production;
+    giteaApiUrl = require('./../config/giteaUrls').apiUrl;
 
 // TODO: figure out a way for user to generate their own API key
 //  (can this be done programatically through the gitea API,
 //  instead of through the gitea web interface?)
 function UserManager(auth) {
-
-    //var api = new Gogs('https://git.door43.org/api/v1'),
-    //var api = new Gogs('http://192.168.213.129:3000/api/v1/'),
     var api = new Gogs(giteaApiUrl),
         tokenStub = {name: 'ts-desktop'};
         
