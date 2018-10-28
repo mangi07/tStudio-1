@@ -29,7 +29,7 @@ After the repository has been cloned to your computer run the following command 
 ##Communicating With Git Server
 This application uses git version control to keep track of translations.  Collaboration between translators can be done through a git server.
 
-In order to communicate with the git server, the application uses the urls given in src/config/giteaUrls.json.  Read Gitea's [documentation] (https://docs.gitea.io/en-us/) if you need to know more about how it works.
+In order to communicate with the git server, the application uses the urls given in src/config/giteaUrls.json.  Read Gitea's [documentation](https://docs.gitea.io/en-us/) if you need to know more about how it works.
 
 > Note: Deleting a project from the desktop UI does not seem to delete the corresponding content on the git server.
 
