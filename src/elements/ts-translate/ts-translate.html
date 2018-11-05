@@ -670,6 +670,7 @@
         },
 
         loadproject: function (event, data) {
+            console.log(data)
             var mythis = this;
             var nav = data.nav;
             var projectmeta = data.projectmeta;
@@ -893,6 +894,18 @@
             var wordlist = App.dataManager.getSourceWords(source);
             var chunkarray = [];
             var title = "";
+
+            // TODO: test changing frames object to display different chunks
+            // Write an App.chunkManager to initially chunk into chapter title, chapter
+            // chunks.
+            // Then, add feature for user chunking preferences to decide how chunkManager
+            // rechunks.
+            // Then, for saving target translation, somehow map user-decided chunks to 
+            // the original door43 chunks on a verse-by-verse basis.
+            // Also load source transalations that come with the helps to see how rechunking
+            // affects those helps
+            console.log(frames)
+            
 
             if (!frames.length) {
                 this.invalidSource(nav, full);
