@@ -5,26 +5,35 @@ var fs = require('fs')
 
 function ChunkManager() {
      this.makeChapterChunks = function(chunksArray){
-         var curr_chapter = "";
-         var chapter_chunks = [];
-         var curr_chunk = {};
-         var index = 0;
-         chunksArray.forEach(function(chunk){
+        var chapter_chunks = [];
+        var started = false;
+        var pushed = false;
+        var curr_chunk = {}
+        chunksArray.forEach(function(chunk){
             if (/[0-9]+/.test(chunk.chunk) && 
-                    curr_chunk != {} && /[0-9]+/.test(curr_chunk.chunk) && 
+                    /[0-9]+/.test(curr_chunk.chunk) && 
                     chunk.chapter == curr_chunk.chapter){
                 // add to the current chapter
                 curr_chunk.content += chunk.content;
             } else {
                 // start a new chunk
-                chapter_chunks.push(curr_chunk)
+                if (started) {
+                    chapter_chunks.push(curr_chunk);
+                    pushed = true;
+                }
+                started = true;
                 curr_chunk = JSON.parse(JSON.stringify(chunk));
+                pushed = false;
             }
-         });
-         for (var x=0; x < 5; x++){
+        });
+        // make sure the last copied chunk gets into the new array
+        if (!pushed){
+            chapter_chunks.push(curr_chunk);
+        }
+        for (var x=46; x < chapter_chunks.length; x++){
             console.log(chapter_chunks[x]);
-         }
-         return chapter_chunks;
+        }
+        return chapter_chunks;
      }       
 }
 
