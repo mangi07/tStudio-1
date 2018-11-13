@@ -36,6 +36,7 @@ process.stdout.write = console.log.bind(console);
     let ImportManager = null;
     let ExportManager = null;
     let PrintManager = null;
+    let ChunkManager = null;
     let Renderer = null;
     let i18n = null;
     let utils = null;
@@ -86,6 +87,9 @@ process.stdout.write = console.log.bind(console);
 
         setMsg('Loading Print Manager...');
         PrintManager = require('../js/printer').PrintManager;
+
+        setMsg('Loading Chunk Manager...');
+        ChunkManager = require('../js/chunker').ChunkManager;
 
         setMsg('Loading Renderer...');
         Renderer = require('../js/render').Renderer;
@@ -169,6 +173,8 @@ process.stdout.write = console.log.bind(console);
 
     let migrateManager = new MigrateManager(configurator, gitManager, reporter, dataManager);
 
+    let chunkManager = new ChunkManager();
+
     // TODO: where should this be?
     mkdirp.sync(configurator.getValue('targetTranslationsDir'));
 
@@ -215,6 +221,8 @@ process.stdout.write = console.log.bind(console);
         reporter: reporter,
 
         dataManager: dataManager,
+
+        chunkManager: chunkManager,
 
         gitManager: gitManager,
 

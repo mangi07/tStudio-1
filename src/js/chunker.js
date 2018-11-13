@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash')
-var fs = require('fs')
+// var fs = require('fs')
 
 function ChunkManager() {
      this.makeChapterChunks = function(chunksArray){
@@ -30,9 +30,9 @@ function ChunkManager() {
         if (!pushed){
             chapter_chunks.push(curr_chunk);
         }
-        for (var x=46; x < chapter_chunks.length; x++){
+        /*for (var x=46; x < chapter_chunks.length; x++){
             console.log(chapter_chunks[x]);
-        }
+        }*/
         return chapter_chunks;
      }       
 }

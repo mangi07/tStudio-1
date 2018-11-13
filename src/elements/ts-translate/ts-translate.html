@@ -887,24 +887,38 @@
             }
             var source = projectmeta.source_translations[selected];
             var container = source.language_id + "_" + source.project_id + "_" + source.resource_id;
-            var frames = App.dataManager.getContainerData(container);
+            
+            var stored_frames = App.dataManager.getContainerData(container);
             var notes = App.dataManager.getSourceNotes(source);
             var questions = App.dataManager.getSourceQuestions(source);
-            var udb = App.dataManager.getSourceUdb(source);
+            var stored_udb = App.dataManager.getSourceUdb(source);
             var wordlist = App.dataManager.getSourceWords(source);
             var chunkarray = [];
             var title = "";
 
+            // write to files so we can see what to work with
+            //fs = require('fs')
+            //fs.writeFileSync('ben_notes.json',JSON.stringify(notes))
+            //fs.writeFileSync('ben_questions.json',JSON.stringify(questions))
+            //fs.writeFileSync('ben_udb.json',JSON.stringify(udb))
+            //fs.writeFileSync('ben_wordlist.json',JSON.stringify(wordlist))
+            
+            // TODO: need to also chunk other chunk properties, like notes and words,
+            //  probably right before line 937 where 'currentproject.chunks' is set.
+            // To do this, possibly look at the logic in function getFrameResources
+            //  and modify it to load a range of chunks
+
             // TODO: test changing frames object to display different chunks
-            // Write an App.chunkManager to initially chunk into chapter title, chapter
-            // chunks.
-            // Then, add feature for user chunking preferences to decide how chunkManager
+            // Add feature for user chunking preferences to decide how chunkManager
             // rechunks.
             // Then, for saving target translation, somehow map user-decided chunks to 
             // the original door43 chunks on a verse-by-verse basis.
             // Also load source transalations that come with the helps to see how rechunking
             // affects those helps
-            console.log(frames)
+            //console.log(frames)
+            // TODO: See if function createextantchunks also needs mirrored this newly added functionality
+            frames = App.chunkManager.makeChapterChunks(stored_frames)
+            udb = App.chunkManager.makeChapterChunks(stored_udb)
             
 
             if (!frames.length) {
@@ -1054,6 +1068,22 @@
             var framewords = [];
             var udbtext = null;
 
+            // TODO: modify logic in this function to allow source chunks to match
+            // resources by verses (ie: verse numbers in each source chunk must be within
+            //   min to max range, where min: current resource chunk # and 
+            //  max: next resource chunk #)
+            // and if anything, resources will overlap when translator decides chunks
+            // For example, if source chunk is verse 1 - 8 and resource chunk #s are
+            //  1, 5, 10, and 14 resource chunks 1 and 5 will be attached to the source
+            //  chunk since the verse range indicated by those resouces chunks (ie: verses 1 - 9)
+            //  overlap the verse range of the source chunk...and resources that relate to
+            //  verse 9 may get included along with the source chunk (vv1-8).
+            //  Furthermore in this example, resource chunks 5 and 10 would get included with
+            //  the next source chunk representing (let's say) verses 9 - 12, since there is
+            //  overlap in the indicated versus.  The better, long-term solution, though,
+            //  would be to manually add to the stored resource files the exact verse that each 
+            //  note, question, and word corresponds to, and then do a verse-to-verse matching 
+            // rather than matching source chunks to resource chunks that have overlapping verse ranges.
             var framenotes = notes.filter(function (note) {
                 return note.chapter === frame.chapter && note.chunk === frame.chunk;
             });
