@@ -30,7 +30,7 @@
                 var chunker = this.test.chunker;
                 var chunks_in = this.test.chunks_arr;
                 var original_chunks = JSON.parse(JSON.stringify(chunks_in));
-                var chapter_chunks = chunker.makeChapterChunks(chunks_in);
+                var chapter_chunks = chunker.makeUserChunks(chunks_in);
                 //fs.writeFileSync("./unit_tests/chunker/expected_data.json",JSON.stringify(chapter_chunks));
                 assert.equal(chapter_chunks.length, 49);
 
