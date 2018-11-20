@@ -5,6 +5,10 @@ var _ = require('lodash')
 
 function ChunkManager() {
 
+    // TODO: consolidate functions? - maybe there's an easier way without creating so many arrays!
+    // All you should need to do is parse through chunk by chunk and collect verses and follow scheme as you go.
+    // The initial scheme can assume full chapter chunks - maybe set a flag to do this by default if no scheme is found to be loaded??
+
     this.getChunkingScheme = function(){
         // TODO: this is just to play around and get started.
         //  Actually read in from json with this same format.
@@ -16,6 +20,8 @@ function ChunkManager() {
             ]}
         ]
     }
+
+    // TODO: add save chunking scheme
 
     this.makeChapterChunks = function(chunksArray){
         var newChunks = [];
@@ -58,31 +64,70 @@ function ChunkManager() {
         return newChunks;
     }
     
-    // to be called per chapter, argument is all verse chunks in the same chapter
-    // TODO: add this to the tests
-    this.splitVerses = function(verseChunks){
-        var versesArr = [];
+    // to be called per chapter, argument is a string of verses
+    this.splitVerses = function(versesContent){
         var markerExp = /(?=<verse number)/;
-        for (var i = 0; i < verseChunks.length; i++) {
-            var verses = verseChunks[i].content.split(markerExp);
-            // don't loose characters at the beginning a chunk before that chunk's first verse marker
-            if (verses.length > 1 && !markerExp.test(verses[0])) {
-                verses[0] += verses[1];
-                verses.splice(1, 1);
-            }
-            versesArr.push(verses);
+        var verses = versesContent.split(markerExp);
+        // don't loose characters at the beginning a chunk before that chunk's first verse marker
+        if (verses.length > 1 && !markerExp.test(verses[0])) {
+            verses[0] += verses[1];
+            verses.splice(1, 1);
         }
-        return versesArr;
+        return verses;
+    }
+
+    // TODO: finish writing this function and add to tests
+    this.makeVerseChunksWithScheme = function(versesChunk, scheme) {
+        var newChunks = []
+        var verses = versesChunk.content;
+        // TODO: test for a short chapter where scheme only asks for one verses chunk
+        var newChunk = null;
+        var content = "";
+
+        for (var schemeIndex = 0; schemeIndex < scheme.length; schemeIndex++) {
+            for (var verseIndex = 0; verseIndex < verses.length; verseIndex++) {
+                content += verses[verseIndex];
+                if (verseIndex == scheme[schemeIndex]) { // 
+                    // push chunk and start a new one
+                    newChunks.push(newChunk);
+                    newChunk = {
+                        "chapter": versesChunk.chapter,
+                        "chunk": versesChunk.chunk,
+                        "content": content
+                    }
+                    content = "";
+                }
+            }
+        }
+        return newChunks;
     }
 
     this.makeUserChunks = function(chunksArray){
-        var inChunks = this.makeChapterChunks(chunksArray);
+        var chapterChunks = this.makeChapterChunks(chunksArray);
         // call getChunkingScheme
+        var newChunks = []
         // for each chunk, figure out if it's a verse chunk
-        // if it's a verse chunk, call method splitVerses,
+        for (var i = 0; i < chapterChunks.length; i++) {
+            var chunk = chapterChunks[i];
+            if (!/[0-9]+/.test(chunk.chunk)) {
+                newChunks.push(chunk);
+                continue;
+            }
+            var verses = this.splitVerses(chunk.content);
+            chunk.content = verses;
+            //console.log(verses);
+
+            // combine verses according to the scheme in new function where you pass in the verses chunk and scheme array for that chapter
+            this.makeVerseChunksWithScheme(chunk, [1, 2, 5]); // TODO: replace with real scheme later - this 2nd argument is just for testing
+
+            newChunks.push(chunk);
+        }
+        // if it's a verse chunk, add the chunk to the group of verse chunks
+        // when the next chapter is encountered call method splitVerses with group of verses passed in,
+        // then add the chunk to the intermediary format
         //   which creates an arr you can then iterate over 
         //   to combine verses according to the scheme (just look up the correct chapter in the scheme)
-        return inChunks; // TODO: replace this when ready
+        return newChunks; // TODO: replace this when ready
     }
     
 }
