@@ -12,13 +12,12 @@ function ChunkManager() {
     this.getChunkingScheme = function(){
         // TODO: this is just to play around and get started.
         //  Actually read in from json with this same format.
-        return [
-            {'book':'Gen',
+        return {
+            'book':'Gen',
             'chapters':[
                 [1,3,10],
                 [1,10,15]
             ]}
-        ]
     }
 
     // TODO: add save chunking scheme
@@ -77,27 +76,35 @@ function ChunkManager() {
     }
 
     // TODO: finish writing this function and add to tests
-    this.makeVerseChunksWithScheme = function(versesChunk, scheme) {
+    // input: versesChunk is an object {chapter:str,chunk:str,content:arr of str} representing an entire chapter where content is an array of its verses
+    // input: scheme is an arr of numbers representing the divisions of the given chapter
+    this.makeVerseChunksWithScheme = function(versesChunk, verseDivisions) {
         var newChunks = []
         var verses = versesChunk.content;
         // TODO: test for a short chapter where scheme only asks for one verses chunk
         var newChunk = null;
         var content = "";
+        var verseIndex = 0;
 
-        for (var schemeIndex = 0; schemeIndex < scheme.length; schemeIndex++) {
-            for (var verseIndex = 0; verseIndex < verses.length; verseIndex++) {
+        for (var schemeIndex = 0; schemeIndex < verseDivisions.length; schemeIndex++) {
+            var nextDivision = schemeIndex+1 < verseDivisions.length ? verseDivisions[schemeIndex+1] : -1;
+
+            for (verseIndex;
+                    (nextDivision == -1 || verseIndex+1 < nextDivision) && 
+                        verseIndex < verses.length; 
+                    verseIndex++) {
                 content += verses[verseIndex];
-                if (verseIndex == scheme[schemeIndex]) { // 
-                    // push chunk and start a new one
-                    newChunks.push(newChunk);
-                    newChunk = {
-                        "chapter": versesChunk.chapter,
-                        "chunk": versesChunk.chunk,
-                        "content": content
-                    }
-                    content = "";
-                }
+                console.log(content);
             }
+            
+            // push chunk and start a new one
+            newChunk = {
+                "chapter": versesChunk.chapter,
+                "chunk": versesChunk.chunk,
+                "content": content
+            }
+            newChunks.push(newChunk);
+            content = "";
         }
         return newChunks;
     }

@@ -85,11 +85,67 @@
                     "content": "  <verse number=\"4\" style=\"v\" /> d \n\n  <verse number=\"5\" style=\"v\" /> e \n"
                 }];
                 var newChunks = chunker.makeUserChunks(chunks);
-                console.log(newChunks);
+                //console.log(newChunks);
                 assert.equal(7, newChunks.length);
             });
         });
 
+        describe('@MakeVerseChunksWithScheme', function(){
+            it('user settings for displayed chunks should combine all verses into a single chunk', function(){
+                var chunker = this.test.chunker;
+                var verseChunk = {
+                    "chapter": "02",
+                    "chunk": "01",
+                    "content": ["<para style=\"s\">a</para>\n\n<para style=\"p\">\n\n  <verse number=\"1\" style=\"v\" /> b \n\n  ",
+                        "<verse number=\"2\" style=\"v\" /> c \n\n  ",
+                        "<verse number=\"3\" style=\"v\" /> c \n"]
+                };
+                // This arrary represents the chunking of a chapter of Bookname
+                var verseDivisions = [1]
+                var actualChunks = chunker.makeVerseChunksWithScheme(verseChunk, verseDivisions);
+                console.log(actualChunks);
+                assert.equal(actualChunks.length, 1);
+                var expectedChunks = [{
+                    "chapter": "02",
+                    "chunk": "01",
+                    "content":"<para style=\"s\">a</para>\n\n<para style=\"p\">\n\n  <verse number=\"1\" style=\"v\" /> b \n\n  <verse number=\"2\" style=\"v\" /> c \n\n  <verse number=\"3\" style=\"v\" /> c \n"}];
+                // assert.equal(actualChunks, expectedChunks);
+                if(!_.isEqual(actualChunks, expectedChunks)){
+                    throw new Error("Was expecting a single chunk with all verses combined.");
+                };
+            });
+        });
+
+        describe('@MakeVerseChunksWithScheme', function(){
+            it('user settings for displayed chunks should make 2 chunks: (v1,v2) and (v3)', function(){
+                var chunker = this.test.chunker;
+                var verseChunk = {
+                    "chapter": "02",
+                    "chunk": "01",
+                    "content": ["<para style=\"s\">a</para>\n\n<para style=\"p\">\n\n  <verse number=\"1\" style=\"v\" /> b \n\n  ",
+                        "<verse number=\"2\" style=\"v\" /> c \n\n  ",
+                        "<verse number=\"3\" style=\"v\" /> c \n"]
+                };
+                // This arrary represents the chunking of a chapter of Bookname
+                var verseDivisions = [1,3]
+                var actualChunks = chunker.makeVerseChunksWithScheme(verseChunk, verseDivisions);
+                console.log(actualChunks);
+                assert.equal(actualChunks.length, 2);
+                var expectedChunks = [{
+                    "chapter": "02",
+                    "chunk": "01",
+                    "content":"<para style=\"s\">a</para>\n\n<para style=\"p\">\n\n  <verse number=\"1\" style=\"v\" /> b \n\n  <verse number=\"2\" style=\"v\" /> c \n\n  "},
+                    {
+                    "chapter": "02",
+                    "chunk": "01",
+                    "content":"<verse number=\"3\" style=\"v\" /> c \n"}
+                ];
+                // assert.equal(actualChunks, expectedChunks);
+                if(!_.isEqual(actualChunks, expectedChunks)){
+                    throw new Error("Was expecting first chunk to hold verses 1 and 2 and second chunk to hold verse 3.");
+                };
+            });
+        });
     });
 
 })();
