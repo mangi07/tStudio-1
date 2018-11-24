@@ -9,14 +9,16 @@ function ChunkManager() {
     // All you should need to do is parse through chunk by chunk and collect verses and follow scheme as you go.
     // The initial scheme can assume full chapter chunks - maybe set a flag to do this by default if no scheme is found to be loaded??
 
-    this.getChunkingScheme = function(){
+
+    // If there is no passed-in chunking scheme, this function should be called to get the JSON object from file 
+    this.getChunkingScheme = function(scheme){
         // TODO: this is just to play around and get started.
         //  Actually read in from json with this same format.
+
         return {
             'book':'Gen',
             'chapters':[
-                [1,3,10],
-                [1,10,15]
+                [1,3,10] // chapter 1 verse divisions
             ]}
     }
 
@@ -75,32 +77,30 @@ function ChunkManager() {
         return verses;
     }
 
-    // TODO: finish writing this function and add to tests
     // input: versesChunk is an object {chapter:str,chunk:str,content:arr of str} representing an entire chapter where content is an array of its verses
     // input: scheme is an arr of numbers representing the divisions of the given chapter
+    // returns: an array of new chunk objects that together represent all the verses of the given chapter
     this.makeVerseChunksWithScheme = function(versesChunk, verseDivisions) {
         var newChunks = []
         var verses = versesChunk.content;
-        // TODO: test for a short chapter where scheme only asks for one verses chunk
         var newChunk = null;
         var content = "";
         var verseIndex = 0;
 
         for (var schemeIndex = 0; schemeIndex < verseDivisions.length; schemeIndex++) {
             var nextDivision = schemeIndex+1 < verseDivisions.length ? verseDivisions[schemeIndex+1] : -1;
+            var verseStart = verseDivisions[schemeIndex];
 
             for (verseIndex;
                     (nextDivision == -1 || verseIndex+1 < nextDivision) && 
                         verseIndex < verses.length; 
                     verseIndex++) {
                 content += verses[verseIndex];
-                console.log(content);
             }
-            
             // push chunk and start a new one
             newChunk = {
                 "chapter": versesChunk.chapter,
-                "chunk": versesChunk.chunk,
+                "chunk": verseStart < 10 ? "0" + verseStart : "" + verseStart,
                 "content": content
             }
             newChunks.push(newChunk);
@@ -109,32 +109,47 @@ function ChunkManager() {
         return newChunks;
     }
 
-    this.makeUserChunks = function(chunksArray){
+    
+    // if it's a verse chunk, add the chunk to the group of verse chunks
+    // when the next chapter is encountered call method splitVerses with group of verses passed in,
+    // then add the chunk to the intermediary format
+    //   which creates an arr you can then iterate over 
+    //   to combine verses according to the scheme (just look up the correct chapter in the scheme)
+    /**
+     * chunksArray is the array of chunks as stored in the DB
+     * Verse divisions takes the form of:
+     *  {
+            'book':'Gen',
+            'chapters':[
+                [1,3,10, 15, 17, 20, 22, 25, 29, 31], // chapter 1 verse divisions
+                [1, 5, 7, 9, 11, 14, 19, 23], // chapter 2 verse divisions
+                ...
+            ]
+        }
+     */
+    this.loadUserChunks = function(chunksArray, verseDivisions){
         var chapterChunks = this.makeChapterChunks(chunksArray);
-        // call getChunkingScheme
-        var newChunks = []
-        // for each chunk, figure out if it's a verse chunk
+        var scheme = [];
+        if (verseDivisions) {
+            scheme = verseDivisions.chapters;
+        } else {
+            scheme = this.getChunkingScheme();
+        }
+        var newChunks = [];
+        
         for (var i = 0; i < chapterChunks.length; i++) {
             var chunk = chapterChunks[i];
-            if (!/[0-9]+/.test(chunk.chunk)) {
+            // for each chunk, figure out if it's a verse chunk
+            if (/[0-9]+/.test(chunk.chunk)) {
+                chunk.content = this.splitVerses(chunk.content);
+                var chapter = parseInt(chunk.chapter);
+                var verseChunks = this.makeVerseChunksWithScheme(chunk, scheme[chapter-1]);
+                Array.prototype.push.apply(newChunks, verseChunks);
+            } else {
                 newChunks.push(chunk);
-                continue;
             }
-            var verses = this.splitVerses(chunk.content);
-            chunk.content = verses;
-            //console.log(verses);
-
-            // combine verses according to the scheme in new function where you pass in the verses chunk and scheme array for that chapter
-            this.makeVerseChunksWithScheme(chunk, [1, 2, 5]); // TODO: replace with real scheme later - this 2nd argument is just for testing
-
-            newChunks.push(chunk);
         }
-        // if it's a verse chunk, add the chunk to the group of verse chunks
-        // when the next chapter is encountered call method splitVerses with group of verses passed in,
-        // then add the chunk to the intermediary format
-        //   which creates an arr you can then iterate over 
-        //   to combine verses according to the scheme (just look up the correct chapter in the scheme)
-        return newChunks; // TODO: replace this when ready
+        return newChunks;
     }
     
 }

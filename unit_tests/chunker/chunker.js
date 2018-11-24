@@ -103,7 +103,7 @@
                 // This arrary represents the chunking of a chapter of Bookname
                 var verseDivisions = [1]
                 var actualChunks = chunker.makeVerseChunksWithScheme(verseChunk, verseDivisions);
-                console.log(actualChunks);
+                
                 assert.equal(actualChunks.length, 1);
                 var expectedChunks = [{
                     "chapter": "02",
@@ -129,7 +129,7 @@
                 // This arrary represents the chunking of a chapter of Bookname
                 var verseDivisions = [1,3]
                 var actualChunks = chunker.makeVerseChunksWithScheme(verseChunk, verseDivisions);
-                console.log(actualChunks);
+                
                 assert.equal(actualChunks.length, 2);
                 var expectedChunks = [{
                     "chapter": "02",
@@ -137,12 +137,90 @@
                     "content":"<para style=\"s\">a</para>\n\n<para style=\"p\">\n\n  <verse number=\"1\" style=\"v\" /> b \n\n  <verse number=\"2\" style=\"v\" /> c \n\n  "},
                     {
                     "chapter": "02",
-                    "chunk": "01",
+                    "chunk": "03",
                     "content":"<verse number=\"3\" style=\"v\" /> c \n"}
                 ];
                 // assert.equal(actualChunks, expectedChunks);
                 if(!_.isEqual(actualChunks, expectedChunks)){
                     throw new Error("Was expecting first chunk to hold verses 1 and 2 and second chunk to hold verse 3.");
+                };
+            });
+        });
+
+        describe('@LoadUserChunks', function(){
+            it('should chunk the given chapter into these chunks: (book), (chapter heading), (vv1-2), (vv3-7), (vv8-10)', function(){
+                var chunker = this.test.chunker;
+                var chapterChunks = [
+                    {
+                        "chapter": "front",
+                        "chunk": "title",
+                        "content": "Bookname"
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "title",
+                        "content": "Chapter 1"
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "01",
+                        "content": "<verse number=\"1\" style=\"v\" /> VERSE ONE <verse number=\"2\" style=\"v\" /> VERSE TWO <verse number=\"3\" style=\"v\" /> VERSE THREE <verse number=\"4\" style=\"v\" /> VERSE FOUR "
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "05",
+                        "content": "<verse number=\"5\" style=\"v\" /> VERSE FIVE <verse number=\"6\" style=\"v\" /> VERSE SIX <verse number=\"7\" style=\"v\" /> VERSE SEVEN "
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "08",
+                        "content": "<verse number=\"8\" style=\"v\" /> VERSE EIGHT <verse number=\"9\" style=\"v\" /> VERSE NINE <verse number=\"10\" style=\"v\" /> VERSE TEN "
+                    }
+                ]
+                
+                // This arrary represents the chunking of a chapter of Bookname
+                // It should chunk the given chapter into these chunks: 
+                // (book), (chapter heading), (vv1-2), (vv3-7), (vv8-10)'
+                var verseDivisions = {
+                    'book':'Bookname',
+                    'chapters':[
+                        [1,3,8] // chapter 1 verse divisions
+                    ]
+                };
+                var actualChunks = chunker.loadUserChunks(chapterChunks, verseDivisions);
+                console.log(actualChunks);
+                
+                assert.equal(actualChunks.length, 5);
+                var expectedChunks = [
+                    {
+                        "chapter": "front",
+                        "chunk": "title",
+                        "content": "Bookname"
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "title",
+                        "content": "Chapter 1"
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "01",
+                        "content": "<verse number=\"1\" style=\"v\" /> VERSE ONE <verse number=\"2\" style=\"v\" /> VERSE TWO "
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "03",
+                        "content": "<verse number=\"3\" style=\"v\" /> VERSE THREE <verse number=\"4\" style=\"v\" /> VERSE FOUR <verse number=\"5\" style=\"v\" /> VERSE FIVE <verse number=\"6\" style=\"v\" /> VERSE SIX <verse number=\"7\" style=\"v\" /> VERSE SEVEN "
+                    },
+                    {
+                        "chapter": "01",
+                        "chunk": "08",
+                        "content": "<verse number=\"8\" style=\"v\" /> VERSE EIGHT <verse number=\"9\" style=\"v\" /> VERSE NINE <verse number=\"10\" style=\"v\" /> VERSE TEN "
+                    }
+                ];
+                // assert.equal(actualChunks, expectedChunks);
+                if(!_.isEqual(actualChunks, expectedChunks)){
+                    throw new Error("Chunks were not correctly rechunked according to user's verse scheme.");
                 };
             });
         });
